@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS TOOLS - Premium YouTube Thumbnail Downloader & Suite</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f7ff',
+              100: '#ebf0ff',
+              200: '#d6e0ff',
+              300: '#b3c7ff',
+              400: '#85a3ff',
+              500: '#5673ff',
+              600: '#3b4eff',
+              700: '#2a36eb',
+              800: '#2129be',
+              900: '#1e2496',
+              950: '#11135c',
+            },
+            slate: {
+              950: '#0b0f19'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+<style>
+/* --- CSS: /styles.css --- */
+/* Custom premium styles and animations */
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #1e293b;
+  height: 6px;
+  border-radius: 9999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5673ff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #3b4eff;
+}
+
+</style></head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-tr from-brand-600 to-indigo-500 p-2.5 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">CS TOOLS</span>
+            <span class="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase bg-brand-500/10 text-brand-400 rounded-full border border-brand-500/20">PRO</span>
+          </div>
+          <p class="text-xs text-slate-400">Enterprise Media Utilities</p>
+        </div>
+      </div>
+
+      <!-- Quick Stats / Status -->
+      <div class="hidden md:flex items-center space-x-6 text-sm">
+        <div class="flex items-center space-x-2 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700/50">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-slate-300 font-medium">All Systems Operational</span>
+        </div>
+        <div class="text-slate-400">
+          Session Downloads: <span id="session-count" class="text-brand-400 font-mono font-bold">0</span>
+        </div>
+      </div>
+
+      <!-- Audio Toggle & Credits Link -->
+      <div class="flex items-center space-x-3">
+        <button id="sound-toggle" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-all" title="Toggle UI Sounds">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+        <a href="#credits-section" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-all flex items-center space-x-1.5">
+          <i data-lucide="award" class="w-3.5 h-3.5 text-brand-400"></i>
+          <span>Credits</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout Container -->
+  <div class="max-w-7xl mx-auto w-full px-4 md:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Sidebar: Navigation & Quick Presets -->
+    <aside class="lg:col-span-3 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Navigation</h3>
+        <nav class="space-y-1">
+          <button id="nav-downloader" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-600 text-white shadow-lg shadow-brand-600/10">
+            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+            <span>Thumbnail Downloader</span>
+          </button>
+          <button id="nav-editor" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+            <i data-lucide="sliders" class="w-4 h-4"></i>
+            <span>Thumbnail Editor</span>
+          </button>
+          <button id="nav-extractor" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+            <i data-lucide="hash" class="w-4 h-4"></i>
+            <span>Metadata & Tags</span>
+          </button>
+          <button id="nav-history" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+            <i data-lucide="history" class="w-4 h-4"></i>
+            <span>Download History</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Quick Demo Presets -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Demo Presets</h3>
+          <span class="text-[10px] text-brand-400 font-mono">Click to test</span>
+        </div>
+        <div class="space-y-2" id="preset-links-container">
+          <!-- Dynamic presets from data.js -->
+        </div>
+      </div>
+
+      <!-- Pro Features Card -->
+      <div class="relative overflow-hidden bg-gradient-to-br from-brand-900/40 to-slate-900 border border-brand-500/30 rounded-2xl p-5">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand-500/10 rounded-full blur-xl -mr-5 -mt-5"></div>
+        <h4 class="font-bold text-sm text-white flex items-center space-x-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4 text-brand-400"></i>
+          <span>CS Tools Premium</span>
+        </h4>
+        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+          Unlock unlimited bulk downloads, high-fidelity WebP conversions, and custom watermark removal.
+        </p>
+        <button class="mt-4 w-full py-2 px-3 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-lg transition-all shadow-md shadow-brand-600/20">
+          Upgrade to Enterprise
+        </button>
+      </div>
+    </aside>
+
+    <!-- Right Main Content Area -->
+    <main class="lg:col-span-9 space-y-8">
+      
+      <!-- Section 1: Thumbnail Downloader (Active by default) -->
+      <section id="section-downloader" class="space-y-6">
+        <!-- Input Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500"></div>
+          
+          <div class="max-w-2xl">
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">YouTube Thumbnail Downloader</h2>
+            <p class="text-slate-400 text-sm mt-1">Extract and download high-resolution YouTube video thumbnails instantly. Supports Shorts, standard videos, and custom links.</p>
+          </div>
+
+          <form id="downloader-form" class="mt-6 space-y-4">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                <i data-lucide="youtube" class="w-5 h-5 text-red-500"></i>
+              </div>
+              <input 
+                type="text" 
+                id="youtube-url-input" 
+                placeholder="Paste YouTube Video URL (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ)" 
+                class="w-full pl-12 pr-24 py-4 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm md:text-base font-mono"
+                required
+              >
+              <div class="absolute inset-y-2 right-2 flex items-center">
+                <button 
+                  type="button" 
+                  id="paste-btn" 
+                  class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-1"
+                >
+                  <i data-lucide="clipboard" class="w-3 h-3"></i>
+                  <span>Paste</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 items-center justify-between">
+              <div class="flex items-center space-x-2 text-xs text-slate-400">
+                <i data-lucide="info" class="w-3.5 h-3.5 text-brand-400"></i>
+                <span>Supports 4K, 1080p, HD, and Standard resolutions.</span>
+              </div>
+              <button 
+                type="submit" 
+                class="w-full sm:w-auto px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-brand-600/20 flex items-center justify-center space-x-2"
+              >
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <span>Extract Thumbnails</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Video Info & Preview Grid (Hidden initially until URL is processed) -->
+        <div id="results-container" class="hidden space-y-6 animate-fade-in">
+          
+          <!-- Video Metadata Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start space-x-4">
+              <div class="p-3 bg-brand-500/10 rounded-xl border border-brand-500/20 text-brand-400 mt-1">
+                <i data-lucide="video" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded-full border border-brand-500/20">Active Video</span>
+                <h3 id="video-title" class="text-lg font-bold text-white mt-1 leading-snug">Video Title Loading...</h3>
+                <p id="video-author" class="text-sm text-slate-400 mt-0.5">Channel Name</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2 w-full md:w-auto">
+              <button id="btn-edit-active" class="flex-1 md:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center justify-center space-x-1.5">
+                <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                <span>Edit Thumbnail</span>
+              </button>
+              <button id="btn-copy-title" class="flex-1 md:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center justify-center space-x-1.5">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>Copy Title</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resolutions Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Max Resolution (1080p / 720p) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col group hover:border-brand-500/50 transition-all duration-300">
+              <div class="relative aspect-video bg-slate-950 overflow-hidden">
+                <img id="img-maxres" src="" alt="Maximum Resolution" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2.5 py-1 rounded-md text-[10px] font-bold text-emerald-400 tracking-wider uppercase">
+                  Ultra HD (1080p)
+                </div>
+                <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2 py-1 rounded text-[10px] font-mono text-slate-300">
+                  1280 x 720
+                </div>
+              </div>
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <h4 class="font-bold text-white text-sm">Maximum Resolution (HQ)</h4>
+                  <p class="text-xs text-slate-400 mt-1">Best quality for presentations, high-res screens, and archiving.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button onclick="downloadThumbnail('maxres')" class="flex-1 py-2.5 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center space-x-1.5">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download JPG</span>
+                  </button>
+                  <button onclick="previewInModal('maxres')" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl transition-all" title="Preview Fullscreen">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Standard Resolution (640x480) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col group hover:border-brand-500/50 transition-all duration-300">
+              <div class="relative aspect-video bg-slate-950 overflow-hidden">
+                <img id="img-sd" src="" alt="Standard Resolution" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2.5 py-1 rounded-md text-[10px] font-bold text-brand-400 tracking-wider uppercase">
+                  Standard (SD)
+                </div>
+                <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2 py-1 rounded text-[10px] font-mono text-slate-300">
+                  640 x 480
+                </div>
+              </div>
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <h4 class="font-bold text-white text-sm">Standard Definition</h4>
+                  <p class="text-xs text-slate-400 mt-1">Optimized file size, perfect for fast-loading web previews.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button onclick="downloadThumbnail('sd')" class="flex-1 py-2.5 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center space-x-1.5">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download JPG</span>
+                  </button>
+                  <button onclick="previewInModal('sd')" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl transition-all" title="Preview Fullscreen">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Medium Resolution (320x180) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col group hover:border-brand-500/50 transition-all duration-300">
+              <div class="relative aspect-video bg-slate-950 overflow-hidden">
+                <img id="img-mq" src="" alt="Medium Resolution" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2.5 py-1 rounded-md text-[10px] font-bold text-amber-400 tracking-wider uppercase">
+                  Medium (MQ)
+                </div>
+                <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2 py-1 rounded text-[10px] font-mono text-slate-300">
+                  320 x 180
+                </div>
+              </div>
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <h4 class="font-bold text-white text-sm">Medium Quality</h4>
+                  <p class="text-xs text-slate-400 mt-1">Compact size, ideal for newsletter embeds and mobile apps.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button onclick="downloadThumbnail('mq')" class="flex-1 py-2.5 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center space-x-1.5">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download JPG</span>
+                  </button>
+                  <button onclick="previewInModal('mq')" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl transition-all" title="Preview Fullscreen">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- High Quality (480x360) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col group hover:border-brand-500/50 transition-all duration-300">
+              <div class="relative aspect-video bg-slate-950 overflow-hidden">
+                <img id="img-hq" src="" alt="High Quality" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2.5 py-1 rounded-md text-[10px] font-bold text-purple-400 tracking-wider uppercase">
+                  High Quality (HQ)
+                </div>
+                <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-2 py-1 rounded text-[10px] font-mono text-slate-300">
+                  480 x 360
+                </div>
+              </div>
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <h4 class="font-bold text-white text-sm">High Quality (HQ)</h4>
+                  <p class="text-xs text-slate-400 mt-1">Standard YouTube fallback thumbnail resolution.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button onclick="downloadThumbnail('hq')" class="flex-1 py-2.5 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center space-x-1.5">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download JPG</span>
+                  </button>
+                  <button onclick="previewInModal('hq')" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl transition-all" title="Preview Fullscreen">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Thumbnail Editor (Advanced Customizer) -->
+      <section id="section-editor" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+          <div class="max-w-2xl">
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Thumbnail Customizer & Editor</h2>
+            <p class="text-slate-400 text-sm mt-1">Add custom text overlays, banners, filters, and branding to any thumbnail before downloading.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+            <!-- Canvas Preview Column -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden p-2 flex items-center justify-center aspect-video relative">
+                <canvas id="editor-canvas" class="max-w-full max-h-full rounded shadow-lg bg-slate-900"></canvas>
+                <div id="canvas-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-slate-950/90">
+                  <i data-lucide="image" class="w-12 h-12 mb-2 text-slate-600"></i>
+                  <p class="text-sm">No thumbnail loaded in editor</p>
+                  <p class="text-xs text-slate-600 mt-1">Extract a thumbnail first or load a preset</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                <span>Canvas Resolution: <strong class="text-slate-200 font-mono">1280 x 720 (16:9)</strong></span>
+                <button id="btn-reset-editor" class="text-brand-400 hover:text-brand-300 flex items-center space-x-1">
+                  <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                  <span>Reset Changes</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Controls Column -->
+            <div class="lg:col-span-5 space-y-6">
+              <!-- Text Overlay Settings -->
+              <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Text Overlay</h3>
+                
+                <div class="space-y-2">
+                  <label class="text-xs text-slate-300">Overlay Text</label>
+                  <input type="text" id="editor-text" value="MUST WATCH!" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-slate-300">Text Color</label>
+                    <input type="color" id="editor-text-color" value="#ffffff" class="w-full h-9 bg-slate-950 border border-slate-800 rounded-lg p-1 cursor-pointer">
+                  </div>
+                  <div>
+                    <label class="text-xs text-slate-300">Font Size</label>
+                    <input type="range" id="editor-font-size" min="20" max="100" value="60" class="w-full mt-3 accent-brand-500">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-slate-300">Position Y</label>
+                    <input type="range" id="editor-text-y" min="10" max="90" value="80" class="w-full mt-3 accent-brand-500">
+                  </div>
+                  <div>
+                    <label class="text-xs text-slate-300">Position X</label>
+                    <input type="range" id="editor-text-x" min="10" max="90" value="50" class="w-full mt-3 accent-brand-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Banner Settings -->
+              <div class="space-y-4 pt-4 border-t border-slate-800">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Banner Background</h3>
+                <div class="flex items-center justify-between">
+                  <label class="text-xs text-slate-300">Enable Banner</label>
+                  <input type="checkbox" id="editor-banner-enable" checked class="w-4 h-4 accent-brand-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-slate-300">Banner Color</label>
+                    <input type="color" id="editor-banner-color" value="#ff0000" class="w-full h-9 bg-slate-950 border border-slate-800 rounded-lg p-1 cursor-pointer">
+                  </div>
+                  <div>
+                    <label class="text-xs text-slate-300">Opacity</label>
+                    <input type="range" id="editor-banner-opacity" min="10" max="100" value="85" class="w-full mt-3 accent-brand-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Filters -->
+              <div class="space-y-4 pt-4 border-t border-slate-800">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Filters</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-slate-300">Brightness</label>
+                    <input type="range" id="editor-brightness" min="50" max="150" value="100" class="w-full mt-2 accent-brand-500">
+                  </div>
+                  <div>
+                    <label class="text-xs text-slate-300">Contrast</label>
+                    <input type="range" id="editor-contrast" min="50" max="150" value="100" class="w-full mt-2 accent-brand-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Export Button -->
+              <button id="btn-download-edited" class="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-brand-600/20 flex items-center justify-center space-x-2">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Download Customized Thumbnail</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Metadata & Tags -->
+      <section id="section-extractor" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+          <div class="max-w-2xl">
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Video Metadata & Smart Tags</h2>
+            <p class="text-slate-400 text-sm mt-1">Extract video details and generate SEO-optimized tags based on the video title and description.</p>
+          </div>
+
+          <div id="extractor-placeholder" class="mt-8 text-center py-12 border border-dashed border-slate-800 rounded-xl">
+            <i data-lucide="hash" class="w-12 h-12 mx-auto text-slate-600 mb-3"></i>
+            <p class="text-slate-400 text-sm">No video loaded yet.</p>
+            <p class="text-xs text-slate-600 mt-1">Enter a YouTube URL in the Downloader tab to extract metadata.</p>
+          </div>
+
+          <div id="extractor-results" class="hidden mt-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Title & Author -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Video Details</h3>
+                <div>
+                  <span class="text-[10px] text-slate-500 uppercase font-mono">Title</span>
+                  <p id="meta-title" class="text-sm text-white font-semibold mt-0.5">Video Title</p>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 uppercase font-mono">Author / Channel</span>
+                  <p id="meta-author" class="text-sm text-white font-semibold mt-0.5">Channel Name</p>
+                </div>
+              </div>
+
+              <!-- Smart Tags Generator -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Smart SEO Tags</h3>
+                  <button id="btn-copy-tags" class="text-xs text-brand-400 hover:text-brand-300 flex items-center space-x-1">
+                    <i data-lucide="copy" class="w-3 h-3"></i>
+                    <span>Copy All</span>
+                  </button>
+                </div>
+                <div id="tags-container" class="flex flex-wrap gap-2">
+                  <!-- Tags will be generated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Download History -->
+      <section id="section-history" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-extrabold text-white tracking-tight">Download History</h2>
+              <p class="text-slate-400 text-sm mt-1">Access your previously extracted and customized thumbnails.</p>
+            </div>
+            <button id="btn-clear-history" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>Clear History</span>
+            </button>
+          </div>
+
+          <div id="history-empty" class="text-center py-12 border border-dashed border-slate-800 rounded-xl mt-6">
+            <i data-lucide="history" class="w-12 h-12 mx-auto text-slate-600 mb-3"></i>
+            <p class="text-slate-400 text-sm">Your history is empty.</p>
+            <p class="text-xs text-slate-600 mt-1">Thumbnails you download or edit will appear here.</p>
+          </div>
+
+          <div id="history-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+            <!-- History items will be injected here -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Premium Credits Section -->
+  <section id="credits-section" class="border-t border-slate-800 bg-slate-900/50 py-12 px-6 mt-auto">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="space-y-3">
+        <div class="flex items-center space-x-2">
+          <div class="bg-brand-600 p-1.5 rounded-lg">
+            <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-bold text-lg text-white tracking-tight">CS TOOLS</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          A professional-grade suite of media utilities designed for content creators, digital marketers, and developers. Built with speed, privacy, and precision in mind.
+        </p>
+      </div>
+      
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Core Technologies</h4>
+        <ul class="text-xs text-slate-400 space-y-1.5">
+          <li class="flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+            <span>HTML5 Canvas API (Real-time Editor)</span>
+          </li>
+          <li class="flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+            <span>YouTube oEmbed API (Metadata Extraction)</span>
+          </li>
+          <li class="flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+            <span>Web Audio API (Interactive Soundscapes)</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Credits & Compliance</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Designed and developed by <strong class="text-slate-200">CS TOOLS Engineering</strong>. All thumbnail assets are fetched directly from YouTube servers. This tool does not host or store copyrighted video content.
+        </p>
+        <div class="pt-2 flex items-center space-x-3 text-xs text-slate-500">
+          <span>v1.2.0</span>
+          <span>•</span>
+          <span>Open Source License</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 px-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2024 CS TOOLS. All rights reserved.</p>
+      <div class="flex items-center space-x-4">
+        <a href="#" class="hover:text-slate-300 transition-colors">Privacy Policy</a>
+        <span>•</span>
+        <a href="#" class="hover:text-slate-300 transition-colors">Terms of Service</a>
+        <span>•</span>
+        <a href="#" class="hover:text-slate-300 transition-colors">Contact Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fullscreen Image Preview Modal -->
+  <div id="preview-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="relative max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <button id="close-modal-btn" class="absolute top-4 right-4 p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full border border-slate-700 transition-all z-10">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="p-6 space-y-4">
+        <div class="aspect-video bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center">
+          <img id="modal-img" src="" alt="Fullscreen Preview" class="max-w-full max-h-full object-contain">
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 id="modal-title" class="font-bold text-white text-base">Thumbnail Preview</h4>
+            <p id="modal-resolution" class="text-xs text-slate-400 mt-0.5">Resolution: 1280 x 720</p>
+          </div>
+          <button id="modal-download-btn" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center space-x-1.5">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3 pointer-events-none"></div>
+
+  <!-- Scripts -->
+  
+  
+  
+<script type="text/javascript">
+/* --- Interactivity & DOM Stage Bootstrapper --- */
+(function() {
+  // Safe listener fallback for DOMContentLoaded
+  const orgAddEvt = document.addEventListener;
+  document.addEventListener = function(type, listener, options) {
+    if (type === 'DOMContentLoaded' && document.readyState !== 'loading') {
+      setTimeout(listener, 1);
+    } else {
+      orgAddEvt.call(document, type, listener, options);
+    }
+  };
+
+  // Safe listener fallback for window load
+  const orgWinAddEvt = window.addEventListener;
+  window.addEventListener = function(type, listener, options) {
+    if (type === 'load' && document.readyState === 'complete') {
+      setTimeout(listener, 1);
+    } else {
+      orgWinAddEvt.call(window, type, listener, options);
+    }
+  };
+
+  // Safe callback mapping for window.onload on late loads
+  let winOnload = null;
+  Object.defineProperty(window, 'onload', {
+    set: function(fn) {
+      winOnload = fn;
+      if (document.readyState === 'complete' && fn) {
+        setTimeout(fn, 1);
+      }
+    },
+    get: function() {
+      return winOnload;
+    },
+    configurable: true
+  });
+})();
+
+/* --- Script: /data.js --- */
+// Global Data Store for CS TOOLS
+window.AppStore = {
+  // Default presets for quick testing
+  presets: [
+    {
+      title: "Lofi Girl - Synthwave Radio",
+      url: "https://www.youtube.com/watch?v=4xDzrJKXOOY",
+      videoId: "4xDzrJKXOOY"
+    },
+    {
+      title: "SpaceX Starship Flight Test",
+      url: "https://www.youtube.com/watch?v=921VbEMA87A",
+      videoId: "921VbEMA87A"
+    },
+    {
+      title: "MKBHD - Apple Vision Pro Review",
+      url: "https://www.youtube.com/watch?v=dtp6b76pMak",
+      videoId: "dtp6b76pMak"
+    }
+  ],
+
+  // Active state
+  state: {
+    activeVideoId: "",
+    activeTitle: "",
+    activeAuthor: "",
+    activeResolution: "maxres", // default selected resolution for modal
+    soundEnabled: true,
+    sessionDownloads: 0,
+    history: []
+  },
+
+  // SEO Tag generation dictionary based on keywords
+  tagKeywords: {
+    "lofi": ["lofi hip hop", "lofi beats", "relaxing music", "study beats", "chillhop", "lofi girl"],
+    "spacex": ["spacex", "starship", "elon musk", "rocket launch", "space exploration", "nasa"],
+    "apple": ["apple", "vision pro", "mkbhd", "tech review", "spatial computing", "iphone"],
+    "review": ["tech review", "unboxing", "hands on", "gadgets", "worth it", "comparison"],
+    "tutorial": ["how to", "step by step", "guide", "for beginners", "learn", "coding"],
+    "gaming": ["gameplay", "walkthrough", "lets play", "gaming channel", "funny moments", "stream"]
+  }
+};
+
+
+/* --- Script: /utils.js --- */
+// Utility functions and helpers
+window.AppHelpers = {
+  
+  // Extract YouTube Video ID from various URL formats
+  extractVideoId: function(url) {
+    if (!url) return null;
+    
+    // Clean up whitespace
+    url = url.trim();
+    
+    // Regular expressions for different YouTube URL formats
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    
+    if (match && match[2].length === 11) {
+      return match[2];
+    }
+    
+    // Fallback for direct 11-character ID input
+    if (url.length === 11 && !url.includes('/') && !url.includes('.')) {
+      return url;
+    }
+    
+    return null;
+  },
+
+  // Fetch video metadata using YouTube's official oEmbed endpoint (CORS-friendly)
+  fetchVideoMetadata: async function(videoId) {
+    try {
+      const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+      if (!response.ok) throw new Error("Failed to fetch metadata");
+      const data = await response.json();
+      return {
+        title: data.title || "YouTube Video",
+        author: data.author_name || "Unknown Creator"
+      };
+    } catch (error) {
+      console.warn("Metadata fetch failed, using fallbacks:", error);
+      return {
+        title: `YouTube Video (${videoId})`,
+        author: "Content Creator"
+      };
+    }
+  },
+
+  // Generate smart tags based on title
+  generateSmartTags: function(title) {
+    const tags = new Set(["youtube", "thumbnail", "cs tools"]);
+    const lowerTitle = title.toLowerCase();
+    
+    // Match keywords from our dictionary
+    Object.keys(window.AppStore.tagKeywords).forEach(key => {
+      if (lowerTitle.includes(key)) {
+        window.AppStore.tagKeywords[key].forEach(tag => tags.add(tag));
+      }
+    });
+    
+    // Extract individual words longer than 4 chars as tags
+    const words = lowerTitle.replace(/[^a-zA-Z0-9 ]/g, "").split(" ");
+    words.forEach(word => {
+      if (word.length > 4 && tags.size < 15) {
+        tags.add(word);
+      }
+    });
+    
+    return Array.from(tags);
+  },
+
+  // Web Audio API Synthesizer for premium UI sound effects
+  playSound: function(type) {
+    if (!window.AppStore.state.soundEnabled) return;
+    
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      const now = ctx.currentTime;
+      
+      if (type === 'click') {
+        // Subtle high-frequency tick
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } else if (type === 'success') {
+        // Upward chime
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'error') {
+        // Low buzz
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+    } catch (e) {
+      console.warn("Web Audio API not supported or blocked:", e);
+    }
+  },
+
+  // Show a beautiful toast notification
+  showToast: function(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto max-w-sm bg-slate-900 border-slate-800 text-slate-100`;
+    
+    let icon = 'info';
+    let iconColor = 'text-brand-400';
+    if (type === 'success') {
+      icon = 'check-circle';
+      iconColor = 'text-emerald-400';
+    } else if (type === 'error') {
+      icon = 'alert-triangle';
+      iconColor = 'text-red-400';
+    }
+
+    toast.innerHTML = `
+      <i data-lucide="${icon}" class="w-5 h-5 ${iconColor} shrink-0"></i>
+      <span class="text-xs font-medium">${message}</span>
+    `;
+
+    container.appendChild(toast);
+    lucide.createIcons();
+
+    // Trigger animation
+    setTimeout(() => {
+      toast.classList.remove('translate-y-2', 'opacity-0');
+    }, 10);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+      toast.classList.add('translate-y-2', 'opacity-0');
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 3000);
+  }
+};
+
+
+/* --- Script: /script.js --- */
+// Main Application Logic
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize Lucide Icons
+  lucide.createIcons();
+
+  // DOM Elements
+  const navDownloader = document.getElementById("nav-downloader");
+  const navEditor = document.getElementById("nav-editor");
+  const navExtractor = document.getElementById("nav-extractor");
+  const navHistory = document.getElementById("nav-history");
+
+  const sectionDownloader = document.getElementById("section-downloader");
+  const sectionEditor = document.getElementById("section-editor");
+  const sectionExtractor = document.getElementById("section-extractor");
+  const sectionHistory = document.getElementById("section-history");
+
+  const downloaderForm = document.getElementById("downloader-form");
+  const youtubeUrlInput = document.getElementById("youtube-url-input");
+  const pasteBtn = document.getElementById("paste-btn");
+  const resultsContainer = document.getElementById("results-container");
+  const sessionCountEl = document.getElementById("session-count");
+  const soundToggleBtn = document.getElementById("sound-toggle");
+
+  // Video Metadata Elements
+  const videoTitleEl = document.getElementById("video-title");
+  const videoAuthorEl = document.getElementById("video-author");
+  const btnEditActive = document.getElementById("btn-edit-active");
+  const btnCopyTitle = document.getElementById("btn-copy-title");
+
+  // Image Elements
+  const imgMaxres = document.getElementById("img-maxres");
+  const imgSd = document.getElementById("img-sd");
+  const imgMq = document.getElementById("img-mq");
+  const imgHq = document.getElementById("img-hq");
+
+  // Preset Container
+  const presetContainer = document.getElementById("preset-links-container");
+
+  // Modal Elements
+  const previewModal = document.getElementById("preview-modal");
+  const closeModalBtn = document.getElementById("close-modal-btn");
+  const modalImg = document.getElementById("modal-img");
+  const modalTitle = document.getElementById("modal-title");
+  const modalResolution = document.getElementById("modal-resolution");
+  const modalDownloadBtn = document.getElementById("modal-download-btn");
+
+  // Editor Elements
+  const editorCanvas = document.getElementById("editor-canvas");
+  const canvasPlaceholder = document.getElementById("canvas-placeholder");
+  const editorText = document.getElementById("editor-text");
+  const editorTextColor = document.getElementById("editor-text-color");
+  const editorFontSize = document.getElementById("editor-font-size");
+  const editorTextY = document.getElementById("editor-text-y");
+  const editorTextX = document.getElementById("editor-text-x");
+  const editorBannerEnable = document.getElementById("editor-banner-enable");
+  const editorBannerColor = document.getElementById("editor-banner-color");
+  const editorBannerOpacity = document.getElementById("editor-banner-opacity");
+  const editorBrightness = document.getElementById("editor-brightness");
+  const editorContrast = document.getElementById("editor-contrast");
+  const btnDownloadEdited = document.getElementById("btn-download-edited");
+  const btnResetEditor = document.getElementById("btn-reset-editor");
+
+  // Extractor Elements
+  const extractorPlaceholder = document.getElementById("extractor-placeholder");
+  const extractorResults = document.getElementById("extractor-results");
+  const metaTitle = document.getElementById("meta-title");
+  const metaAuthor = document.getElementById("meta-author");
+  const tagsContainer = document.getElementById("tags-container");
+  const btnCopyTags = document.getElementById("btn-copy-tags");
+
+  // History Elements
+  const historyEmpty = document.getElementById("history-empty");
+  const historyGrid = document.getElementById("history-grid");
+  const btnClearHistory = document.getElementById("btn-clear-history");
+
+  // Canvas Context
+  const ctx = editorCanvas.getContext("2d");
+  let editorImage = null;
+
+  // Load History from LocalStorage
+  function loadHistory() {
+    const saved = localStorage.getItem("cs_tools_history");
+    if (saved) {
+      window.AppStore.state.history = JSON.parse(saved);
+    }
+    renderHistory();
+  }
+
+  // Save History to LocalStorage
+  function saveHistory() {
+    localStorage.setItem("cs_tools_history", JSON.stringify(window.AppStore.state.history));
+    renderHistory();
+  }
+
+  // Render History Grid
+  function renderHistory() {
+    if (window.AppStore.state.history.length === 0) {
+      historyEmpty.classList.remove("hidden");
+      historyGrid.classList.add("hidden");
+    } else {
+      historyEmpty.classList.add("hidden");
+      historyGrid.classList.remove("hidden");
+      
+      historyGrid.innerHTML = "";
+      window.AppStore.state.history.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col group hover:border-brand-500/50 transition-all";
+        card.innerHTML = `
+          <div class="relative aspect-video bg-slate-900 overflow-hidden">
+            <img src="${item.thumbnailUrl}" alt="History Thumbnail" class="w-full h-full object-cover">
+            <div class="absolute top-2 left-2 bg-slate-900/90 border border-slate-700 px-2 py-0.5 rounded text-[10px] font-mono text-slate-300">
+              ${item.resolution || 'HQ'}
+            </div>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+            <div>
+              <h4 class="font-bold text-white text-xs line-clamp-2">${item.title}</h4>
+              <p class="text-[10px] text-slate-500 mt-1">${item.date}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="loadHistoryItem('${item.videoId}')" class="flex-1 py-1.5 bg-brand-600 hover:bg-brand-500 text-white text-[10px] font-semibold rounded-lg transition-all">
+                Load Video
+              </button>
+              <button onclick="deleteHistoryItem(${index})" class="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg transition-all" title="Delete">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        historyGrid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+  }
+
+  // Global accessors for inline onclicks
+  window.loadHistoryItem = function(videoId) {
+    window.AppHelpers.playSound('click');
+    youtubeUrlInput.value = `https://www.youtube.com/watch?v=${videoId}`;
+    switchTab("downloader");
+    processVideo(videoId);
+  };
+
+  window.deleteHistoryItem = function(index) {
+    window.AppHelpers.playSound('click');
+    window.AppStore.state.history.splice(index, 1);
+    saveHistory();
+    window.AppHelpers.showToast("Item removed from history", "info");
+  };
+
+  // Render Presets
+  function renderPresets() {
+    presetContainer.innerHTML = "";
+    window.AppStore.presets.forEach(preset => {
+      const btn = document.createElement("button");
+      btn.className = "w-full text-left px-3 py-2 rounded-lg bg-slate-800/40 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 text-xs text-slate-300 transition-all flex items-center justify-between group";
+      btn.innerHTML = `
+        <span class="truncate pr-2 group-hover:text-white">${preset.title}</span>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-500 group-hover:text-brand-400 shrink-0"></i>
+      `;
+      btn.addEventListener("click", () => {
+        window.AppHelpers.playSound('click');
+        youtubeUrlInput.value = preset.url;
+        processVideo(preset.videoId);
+      });
+      presetContainer.appendChild(btn);
+    });
+    lucide.createIcons();
+  }
+
+  // Tab Switcher
+  function switchTab(tabId) {
+    window.AppHelpers.playSound('click');
+    
+    // Reset active classes
+    const tabs = [
+      { nav: navDownloader, sec: sectionDownloader },
+      { nav: navEditor, sec: sectionEditor },
+      { nav: navExtractor, sec: sectionExtractor },
+      { nav: navHistory, sec: sectionHistory }
+    ];
+
+    tabs.forEach(t => {
+      t.nav.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200";
+      t.sec.classList.add("hidden");
+    });
+
+    // Set active
+    const active = tabs.find(t => t.nav.id === `nav-${tabId}`);
+    if (active) {
+      active.nav.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-600 text-white shadow-lg shadow-brand-600/10";
+      active.sec.classList.remove("hidden");
+    }
+  }
+
+  // Event Listeners for Navigation
+  navDownloader.addEventListener("click", () => switchTab("downloader"));
+  navEditor.addEventListener("click", () => switchTab("editor"));
+  navExtractor.addEventListener("click", () => switchTab("extractor"));
+  navHistory.addEventListener("click", () => switchTab("history"));
+
+  // Sound Toggle
+  soundToggleBtn.addEventListener("click", () => {
+    window.AppStore.state.soundEnabled = !window.AppStore.state.soundEnabled;
+    if (window.AppStore.state.soundEnabled) {
+      soundToggleBtn.innerHTML = `<i data-lucide="volume-2" class="w-4 h-4"></i>`;
+      soundToggleBtn.className = "p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-all";
+      window.AppHelpers.playSound('click');
+    } else {
+      soundToggleBtn.innerHTML = `<i data-lucide="volume-x" class="w-4 h-4"></i>`;
+      soundToggleBtn.className = "p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-500 transition-all";
+    }
+    lucide.createIcons();
+  });
+
+  // Paste Button
+  pasteBtn.addEventListener("click", async () => {
+    window.AppHelpers.playSound('click');
+    try {
+      const text = await navigator.clipboard.readText();
+      youtubeUrlInput.value = text;
+      window.AppHelpers.showToast("URL pasted from clipboard", "success");
+    } catch (err) {
+      window.AppHelpers.showToast("Clipboard access denied. Please paste manually.", "error");
+    }
+  });
+
+  // Form Submit Handler
+  downloaderForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const url = youtubeUrlInput.value;
+    const videoId = window.AppHelpers.extractVideoId(url);
+    
+    if (videoId) {
+      processVideo(videoId);
+    } else {
+      window.AppHelpers.playSound('error');
+      window.AppHelpers.showToast("Invalid YouTube URL or Video ID", "error");
+    }
+  });
+
+  // Process Video and Load Thumbnails
+  async function processVideo(videoId) {
+    window.AppHelpers.playSound('success');
+    window.AppStore.state.activeVideoId = videoId;
+    
+    // Show loading state
+    videoTitleEl.textContent = "Fetching video details...";
+    videoAuthorEl.textContent = "";
+    resultsContainer.classList.remove("hidden");
+    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Fetch real metadata via oEmbed
+    const meta = await window.AppHelpers.fetchVideoMetadata(videoId);
+    window.AppStore.state.activeTitle = meta.title;
+    window.AppStore.state.activeAuthor = meta.author;
+
+    // Update UI
+    videoTitleEl.textContent = meta.title;
+    videoAuthorEl.textContent = meta.author;
+
+    // Set Thumbnail Sources
+    const maxresUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    const sdUrl = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+    const mqUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+    const hqUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+    imgMaxres.src = maxresUrl;
+    imgSd.src = sdUrl;
+    imgMq.src = mqUrl;
+    imgHq.src = hqUrl;
+
+    // Handle fallback if maxres doesn't exist (some older videos don't have maxres)
+    imgMaxres.onerror = () => {
+      imgMaxres.src = hqUrl; // Fallback to HQ
+    };
+
+    // Update Metadata & Tags Tab
+    extractorPlaceholder.classList.add("hidden");
+    extractorResults.classList.remove("hidden");
+    metaTitle.textContent = meta.title;
+    metaAuthor.textContent = meta.author;
+    
+    // Generate Tags
+    const tags = window.AppHelpers.generateSmartTags(meta.title);
+    tagsContainer.innerHTML = "";
+    tags.forEach(tag => {
+      const span = document.createElement("span");
+      span.className = "px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-mono border border-slate-700/50 cursor-pointer transition-all";
+      span.textContent = `#${tag}`;
+      span.addEventListener("click", () => {
+        navigator.clipboard.writeText(tag);
+        window.AppHelpers.playSound('click');
+        window.AppHelpers.showToast(`Copied tag: #${tag}`, "success");
+      });
+      tagsContainer.appendChild(span);
+    });
+
+    // Load into Editor Canvas
+    loadEditorImage(maxresUrl);
+
+    // Add to History
+    addToHistory(videoId, meta.title, maxresUrl);
+  }
+
+  // Add to History helper
+  function addToHistory(videoId, title, thumbnailUrl) {
+    // Avoid duplicates
+    const exists = window.AppStore.state.history.some(item => item.videoId === videoId);
+    if (!exists) {
+      const newItem = {
+        videoId,
+        title,
+        thumbnailUrl,
+        resolution: "1080p",
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+      window.AppStore.state.history.unshift(newItem);
+      // Limit history to 12 items
+      if (window.AppStore.state.history.length > 12) {
+        window.AppStore.state.history.pop();
+      }
+      saveHistory();
+    }
+  }
+
+  // Copy Title Button
+  btnCopyTitle.addEventListener("click", () => {
+    navigator.clipboard.writeText(window.AppStore.state.activeTitle);
+    window.AppHelpers.playSound('click');
+    window.AppHelpers.showToast("Video title copied to clipboard!", "success");
+  });
+
+  // Copy Tags Button
+  btnCopyTags.addEventListener("click", () => {
+    const tags = Array.from(tagsContainer.querySelectorAll("span"))
+      .map(span => span.textContent.replace("#", ""))
+      .join(", ");
+    navigator.clipboard.writeText(tags);
+    window.AppHelpers.playSound('click');
+    window.AppHelpers.showToast("All tags copied to clipboard!", "success");
+  });
+
+  // Switch to Editor with active image
+  btnEditActive.addEventListener("click", () => {
+    switchTab("editor");
+  });
+
+  // Download Thumbnail Helper (Direct download via canvas blob to avoid CORS issues)
+  window.downloadThumbnail = function(resolution) {
+    window.AppHelpers.playSound('click');
+    const videoId = window.AppStore.state.activeVideoId;
+    if (!videoId) return;
+
+    let url = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    if (resolution === 'sd') url = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+    if (resolution === 'mq') url = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+    if (resolution === 'hq') url = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+    // Create temporary image to draw on canvas and download
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = url;
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const tempCtx = canvas.getContext("2d");
+      tempCtx.drawImage(img, 0, 0);
+      
+      canvas.toBlob((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `CS-Tools-Thumbnail-${videoId}-${resolution}.jpg`;
+        link.click();
+        
+        // Update Session Count
+        window.AppStore.state.sessionDownloads++;
+        sessionCountEl.textContent = window.AppStore.state.sessionDownloads;
+        window.AppHelpers.showToast("Download started successfully!", "success");
+      }, "image/jpeg", 0.95);
+    };
+    img.onerror = function() {
+      // Fallback direct link open if canvas fails
+      window.open(url, '_blank');
+      window.AppHelpers.showToast("Opening image in new tab (CORS fallback)", "info");
+    };
+  };
+
+  // Preview in Modal
+  window.previewInModal = function(resolution) {
+    window.AppHelpers.playSound('click');
+    const videoId = window.AppStore.state.activeVideoId;
+    if (!videoId) return;
+
+    let url = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    let resText = "1280 x 720 (Ultra HD)";
+    if (resolution === 'sd') { url = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`; resText = "640 x 480 (Standard)"; }
+    if (resolution === 'mq') { url = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`; resText = "320 x 180 (Medium)"; }
+    if (resolution === 'hq') { url = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`; resText = "480 x 360 (High Quality)"; }
+
+    window.AppStore.state.activeResolution = resolution;
+    modalImg.src = url;
+    modalTitle.textContent = window.AppStore.state.activeTitle;
+    modalResolution.textContent = `Resolution: ${resText}`;
+    
+    previewModal.classList.remove("hidden");
+  };
+
+  // Close Modal
+  closeModalBtn.addEventListener("click", () => {
+    window.AppHelpers.playSound('click');
+    previewModal.classList.add("hidden");
+  });
+
+  modalDownloadBtn.addEventListener("click", () => {
+    downloadThumbnail(window.AppStore.state.activeResolution);
+    previewModal.classList.add("hidden");
+  });
+
+  // --- Thumbnail Editor Logic ---
+  function loadEditorImage(url) {
+    canvasPlaceholder.classList.add("hidden");
+    editorImage = new Image();
+    editorImage.crossOrigin = "anonymous";
+    editorImage.src = url;
+    editorImage.onload = function() {
+      // Set canvas dimensions to match standard 16:9 HD
+      editorCanvas.width = 1280;
+      editorCanvas.height = 720;
+      drawEditor();
+    };
+    editorImage.onerror = function() {
+      // If maxres fails, try HQ fallback for editor
+      if (url.includes("maxresdefault")) {
+        loadEditorImage(url.replace("maxresdefault", "hqdefault"));
+      }
+    };
+  }
+
+  function drawEditor() {
+    if (!editorImage) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, editorCanvas.width, editorCanvas.height);
+
+    // Apply Filters
+    const brightness = editorBrightness.value;
+    const contrast = editorContrast.value;
+    ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+
+    // Draw base image
+    ctx.drawImage(editorImage, 0, 0, editorCanvas.width, editorCanvas.height);
+    
+    // Reset filter for text/banner overlays
+    ctx.filter = 'none';
+
+    // Draw Banner Background if enabled
+    if (editorBannerEnable.checked) {
+      const bannerOpacity = editorBannerOpacity.value / 100;
+      ctx.fillStyle = hexToRgbA(editorBannerColor.value, bannerOpacity);
+      
+      // Banner height is proportional to font size
+      const fontSize = parseInt(editorFontSize.value);
+      const bannerHeight = fontSize * 1.6;
+      const yPos = (editorTextY.value / 100) * editorCanvas.height - (fontSize * 1.1);
+      
+      ctx.fillRect(0, yPos, editorCanvas.width, bannerHeight);
+    }
+
+    // Draw Text Overlay
+    const text = editorText.value.toUpperCase();
+    if (text) {
+      const fontSize = editorFontSize.value;
+      ctx.font = `italic bold ${fontSize}px 'Inter', sans-serif`;
+      ctx.fillStyle = editorTextColor.value;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      
+      // Text Shadow for readability
+      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 4;
+
+      const x = (editorTextX.value / 100) * editorCanvas.width;
+      const y = (editorTextY.value / 100) * editorCanvas.height;
+      
+      ctx.fillText(text, x, y);
+      
+      // Reset shadow
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+    }
+  }
+
+  // Helper to convert hex to rgba
+  function hexToRgbA(hex, alpha) {
+    let c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+    }
+    return 'rgba(0,0,0,0.5)';
+  }
+
+  // Editor Controls Event Listeners
+  const controls = [
+    editorText, editorTextColor, editorFontSize, editorTextY, editorTextX,
+    editorBannerEnable, editorBannerColor, editorBannerOpacity,
+    editorBrightness, editorContrast
+  ];
+
+  controls.forEach(control => {
+    control.addEventListener("input", drawEditor);
+  });
+
+  // Reset Editor
+  btnResetEditor.addEventListener("click", () => {
+    window.AppHelpers.playSound('click');
+    editorText.value = "MUST WATCH!";
+    editorTextColor.value = "#ffffff";
+    editorFontSize.value = "60";
+    editorTextY.value = "80";
+    editorTextX.value = "50";
+    editorBannerEnable.checked = true;
+    editorBannerColor.value = "#ff0000";
+    editorBannerOpacity.value = "85";
+    editorBrightness.value = "100";
+    editorContrast.value = "100";
+    drawEditor();
+    window.AppHelpers.showToast("Editor settings reset", "info");
+  });
+
+  // Download Edited Thumbnail
+  btnDownloadEdited.addEventListener("click", () => {
+    window.AppHelpers.playSound('click');
+    if (!editorImage) {
+      window.AppHelpers.showToast("Please load a thumbnail first", "error");
+      return;
+    }
+
+    editorCanvas.toBlob((blob) => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `CS-Tools-Custom-Thumbnail-${window.AppStore.state.activeVideoId || 'edit'}.jpg`;
+      link.click();
+      
+      // Update Session Count
+      window.AppStore.state.sessionDownloads++;
+      sessionCountEl.textContent = window.AppStore.state.sessionDownloads;
+      window.AppHelpers.showToast("Custom thumbnail downloaded!", "success");
+    }, "image/jpeg", 0.95);
+  });
+
+  // Clear History
+  btnClearHistory.addEventListener("click", () => {
+    window.AppHelpers.playSound('click');
+    window.AppStore.state.history = [];
+    saveHistory();
+    window.AppHelpers.showToast("History cleared", "info");
+  });
+
+  // Initial Setup
+  renderPresets();
+  loadHistory();
+});
+
+</script></body>
+</html>
